@@ -1,0 +1,69 @@
+<!--
+  Generated template for the ItemList page.
+
+  See http://ionicframework.com/docs/v2/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-navbar>
+    <ion-title>我的工作单</ion-title>
+  </ion-navbar>
+  <ion-toolbar>
+    <ion-searchbar placeholder='搜索' [(ngModel)]="myInput" [showCancelButton]="shouldShowCancel"
+                   (ionInput)="onInput($event)" (ionCancel)="onCancel($event)"></ion-searchbar>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-refresher (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content
+            pullingIcon="arrow-dropdown"
+            pullingText="下拉刷新"
+            refreshingSpinner="circles"
+            refreshingText="加载中...">
+    </ion-refresher-content>
+  </ion-refresher>
+  <div *ngIf="items.length <= 0" padding>
+    <p style="width:100%;text-align: center;">目前没有待完成的工作任务</p>
+  </div>
+  <ion-list *ngIf="items.length > 0" no-margin>
+    <ion-item-sliding *ngFor="let item of items; let i = index">
+      <!--预约单-->
+      <ion-item detail-push mode="ios" tappable (click)="openDetail(item, i)">
+        <ion-thumbnail item-left>
+          <img src="assets/img/22.png">
+        </ion-thumbnail>
+
+
+        <h3 *ngIf="item.emergencyLevel==1" class="emergency1">{{item.billNo}}| {{item.transferType}} |级别{{item.emergencyLevel}}</h3>
+        <h3 *ngIf="item.emergencyLevel==2" class="emergency2">{{item.billNo}}| {{item.transferType}} |级别{{item.emergencyLevel}}</h3>
+        <h3 *ngIf="item.emergencyLevel==3" class="emergency3">{{item.billNo}}| {{item.transferType}} |级别{{item.emergencyLevel}}</h3>
+        <h3 *ngIf="item.emergencyLevel==4" class="emergency4">{{item.billNo}}| {{item.transferType}} |级别{{item.emergencyLevel}}</h3>
+        <p>运送人员：{{item.operatorName}}</p>
+        <p>预约时间：{{item.appointmentTime}}</p>
+        <p *ngIf="item.status == '派工'"  style="color: #f90c17 !important;">当前状态：{{item.status}}</p>
+        <p *ngIf="item.status == '已接受'" style="color: #58c54a !important;">当前状态：{{item.status}}</p>
+        <p *ngIf="item.status == '已开始'" style="color: #58c54a !important;">当前状态：{{item.status}}</p>
+        <p>始发科室：{{item.fromLocationName}}</p>
+        <p>目的科室：{{item.toLocationName}}</p>
+        <p>运送工具：{{item.transferTool}}</p>
+      </ion-item>
+
+      <!--<ion-item-options>-->
+        <!--<button ion-button color="danger" (click)="approve(item, i)">-->
+          <!--已完成-->
+        <!--</button>-->
+      <!--</ion-item-options>-->
+    </ion-item-sliding>
+  </ion-list>
+
+</ion-content>
+<ion-footer no-padding *ngIf="isEdit">
+  <ion-toolbar>
+    <div class="footerpanel">
+      <ion-checkbox (click)="checkAll()" [checked]="selectedAllCheck" mode="ios"></ion-checkbox>
+      <ion-label>全选</ion-label>
+      <button class="detail-button agree">批准</button>
+    </div>
+  </ion-toolbar>
+</ion-footer>

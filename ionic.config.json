@@ -1,0 +1,21 @@
+{
+  "name": "HIS",
+  "integrations": {
+    "cordova": {}
+  },
+  "proxies": [
+    {
+      "path": "/api",
+      "proxyUrl": "http://svlpot1-pas.csvw.com:50000"
+    },
+    {
+      "path": "/apid",
+      "proxyUrl": "http://transport.shyozan.com"
+    },
+    {
+      "path": "/apit",
+      "proxyUrl": "http://10.160.128.108:82"
+    }
+  ],
+  "type": "ionic-angular"
+}

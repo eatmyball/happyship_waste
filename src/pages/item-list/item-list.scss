@@ -1,0 +1,77 @@
+page-item-list {
+  h3 {
+    font-size: 1.4rem!important;
+    overflow: hidden!important;
+    white-space: nowrap!important;
+    text-overflow: ellipsis!important;
+  }
+  p {
+    font-size: 1.3rem!important;
+    overflow: hidden!important;
+    white-space: nowrap!important;
+    text-overflow: ellipsis!important;
+  }
+
+  .item-ios {
+    padding-left: 8px!important;
+  }
+  .item-md {
+    padding-left: 8px!important;
+  }
+
+  .item-ios ion-thumbnail[item-left] {
+    margin: 8px 8px 8px 0!important;
+  }
+
+  .item-md ion-thumbnail[item-left] {
+    margin: 8px 8px 8px 0!important;
+  }
+
+  .editClass {
+    font-size: 1.4rem;
+  }
+
+  .footerpanel {
+    display: flex;
+    height: 3.5rem;
+    line-height: 3.5rem;
+  }
+
+  ion-footer .checkbox-icon {
+    top: calc((3.5rem - 21px) / 2);
+  }
+
+  ion-footer ion-checkbox {
+    padding-left: 6px ;
+  }
+
+  ion-footer ion-label {
+    margin: 0 !important;
+    padding-left: 1rem;
+  }
+}
+
+.toastCss {
+  text-align: center;
+}
+
+.emergency1{
+  color: #58c54a;
+}
+
+.emergency2{
+  color: #fff17c;
+}
+
+
+.emergency3{
+  color: #d05243;
+}
+
+
+.emergency4{
+  color: #f90c17;
+}
+
+
+

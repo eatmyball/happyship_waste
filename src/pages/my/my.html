@@ -1,0 +1,33 @@
+<!--
+  Generated template for the My page.
+
+  See http://ionicframework.com/docs/v2/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>
+      设置
+    </ion-title>
+  </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+  <ion-list>
+    <button ion-item (click)="openHelp()">
+      <div class="line"><img class="div_img"  src="assets/img/help01.png"></div><p class="text">帮助</p>
+    </button>
+    <button ion-item (click)="openContact()">
+      <div class="line"><img class="div_img"  src="assets/img/callus.png"></div><p class="text">联系我们</p>
+    </button>
+    <button ion-item (click)="about()">
+      <div class="line"><img class="div_img"  src="assets/img/info.jpg"></div><p class="text">关于版本</p>
+    </button>
+    <button ion-item (click)="logout()">
+      <div class="line"><img class="div_img"  src="assets/img/exit.png"></div><p class="text">退出</p>
+    </button>
+  </ion-list>
+</ion-content>

@@ -1,0 +1,41 @@
+page-login {
+  .button-ios {
+    margin: 0 !important;
+  }
+  .button-md {
+    margin: 0 !important;
+  }
+  .item-block {
+    min-height: 3rem !important;
+  }
+
+  .rememberitem {
+    font-size: 1rem;
+  }
+
+  .login {
+    background: url('../assets/img/login.jpg') no-repeat center center;
+    background-size: cover;
+    height: 100%;
+    width: 100%;
+  }
+
+  .login-div {
+    width: 80%;
+    height: 60%;
+    display: flex;
+    flex-direction: column;
+    //display: -webkit-flex; /* Safari */
+    //position: absolute;
+    //top: 63%;
+    //text-align: center;
+    margin: 0 auto;
+    //padding: 0;
+    //padding-top:63%;
+    //margin-top:63%;
+  }
+
+  .blank {
+    height:40%;
+  }
+}

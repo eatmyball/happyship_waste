@@ -1,0 +1,98 @@
+<!--
+  Generated template for the ItemDetail page.
+
+  See http://ionicframework.com/docs/v2/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-navbar>
+    <ion-buttons start>
+      <button ion-button (click)="dismiss()">
+        <span ion-text color="primary" showWhen="ios">取消</span>
+        <ion-icon name="md-close" showWhen="android,windows"></ion-icon>
+      </button>
+    </ion-buttons>
+    <ion-title>{{detail.DESC}}</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content class="detail-content">
+  <!--预约单-->
+  <ion-list no-margin *ngIf="detail.success === true">
+    <ion-item>
+      <div class="div_no">
+        <img src="assets/img/22.png" class="div_img">
+        <h3 class="object-no">工作单编号：{{detail.data.billNo}}
+          <br>员工号：{{detail.data.operatorCode}}&nbsp;&nbsp;{{detail.data.operatorName}}
+        </h3>
+      </div>
+    </ion-item>
+    <ion-item>
+      <h2>详细信息</h2>
+      <h3>预约时间：<p class="description_ten">{{detail.data.appointmentTime}}</p></h3>
+      <h3>紧急程度级别：<p class="description_ten">{{detail.data.emergencyLevel}}</p></h3>
+      <h3>运送模式：<p class="description_ten">{{detail.data.transferMode}}</p></h3>
+      <h3>运送类型：<p class="description_ten">{{detail.data.transferType}}</p></h3>
+      <h3>运送项目：<p class="description_ten">{{detail.data.transferItem}}</p></h3>
+      <h3>运送工具：<p class="description_ten">{{detail.data.transferTool}}</p></h3>
+
+      <!-- <h3>始发科室编号：<p class="description_ten">{{detail.data.fromLocationCode}}</p></h3> -->
+      <h3>始发科室：<p class="description_ten">{{detail.data.fromLocationName}}</p></h3>
+      <!-- <h3>目的科室编号：<p class="description_ten">{{detail.data.toLocationCode}}</p></h3> -->
+      <h3>目的科室：<p class="description_ten">{{detail.data.toLocationName}}</p></h3>
+      <h3>病床号：<p class="description_ten">{{detail.data.sickbed}}</p></h3>
+      <h3>住院号：<p class="description_ten">{{detail.data.patientNo}}</p></h3>
+      <h3>病人姓名：<p class="description_ten">{{detail.data.patientName}}</p></h3>
+      <h3>病人性别：<p class="description_ten">{{detail.data.patientSex}}</p></h3>
+      <h3>病人年龄：<p class="description_ten">{{detail.data.patientAge}}</p></h3>
+      <!--<h3>运送人员：<p class="description_ten">{{detail.data.operatorCode}} | {{detail.data.operatorName}}</p></h3>-->
+
+      <!--<h3>标准时长：<p class="description_ten">{{detail.data.standardLength}}</p></h3>
+      <h3>派工提醒：<p class="description_ten">{{detail.data.assignAlertLength}}</p></h3>
+      <h3>运送提醒：<p class="description_ten">{{detail.data.transferAlertLength}}</p></h3> -->
+      <h3>状态：<p class="description_ten">{{detail.data.status}}</p></h3>
+      <h3>备注：<p class="description_ten">{{detail.data.remark}}</p></h3>
+      <!--<h3>创建人：<p class="description_ten">{{detail.data.creater}}</p></h3>
+      <h3>创建时间：<p class="description_ten">{{detail.data.createTime}}</p></h3>
+      <h3>修改人：<p class="description_ten">{{detail.data.modifier}}</p></h3>
+      <h3>modifyTime：<p class="description_ten">{{detail.data.modifyTime}}</p></h3>-->
+    </ion-item>
+  </ion-list>
+
+  <ion-list no-margin text-wrap *ngIf="detail.FLAG == 'E'">
+    <h3>接口FLAG返回值为E：{{detail.MSG.item.MESSAGE}}</h3>
+  </ion-list>
+  <ion-list no-margin text-wrap *ngIf="detail.FLAG == ''">
+    <h3>接口FLAG返回值为空</h3>
+  </ion-list>
+
+</ion-content>
+
+<ion-footer *ngIf="detail.success === true" no-padding>
+  <ion-toolbar>
+
+    <div class="button-group">
+      <!--<button class="detail-button refuse" (click)="reject()">退回</button>-->
+      <!--<button class="detail-button add" (click)="supplement()">申请变更</button>-->
+      <button class="detail-button refuse" (click)="back()">返回</button>
+      <button class="detail-button hidden" [disabled]="detail.data.status == '完工'" >{{btn_action_text_manual}}</button>
+      <button class="detail-button agree" [disabled]="detail.data.status == '完工'" (click)="approve()">{{btn_action_text}}</button>
+
+
+    </div>
+    <!--<ion-segment>
+      <ion-segment-button value="create" (ionSelect)="approve()">
+        <ion-icon name="create"></ion-icon>
+        批准
+      </ion-segment-button>
+      <ion-segment-button value="remove-circle" *ngIf="type != '06'" (ionSelect)="reject()">
+        <ion-icon name="remove-circle"></ion-icon>
+        拒绝
+      </ion-segment-button>
+      <ion-segment-button value="paper" *ngIf="type != '02'" (ionSelect)="supplement()">
+        <ion-icon name="paper"></ion-icon>
+        补充材料
+      </ion-segment-button>
+    </ion-segment>-->
+  </ion-toolbar>
+</ion-footer>

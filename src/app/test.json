@@ -1,0 +1,521 @@
+{
+  "success": true,
+  "data": {
+    "menuPermissions": [
+      {
+        "text": "主数据管理",
+        "iconCls": "",
+        "leaf": false,
+        "permission": {
+          "permissionId": 1,
+          "parentId": null,
+          "permissionCode": "masterdata",
+          "permissionName": "主数据管理",
+          "permissionType": "0",
+          "url": "",
+          "iconCls": "",
+          "sortNo": 1,
+          "status": "1",
+          "remark": ""
+        },
+        "children": [
+          {
+            "text": "科室管理",
+            "iconCls": "icon_room",
+            "leaf": true,
+            "permission": {
+              "permissionId": 101,
+              "parentId": 1,
+              "permissionCode": "department:view",
+              "permissionName": "科室管理",
+              "permissionType": "0",
+              "url": "masterdata/department/index",
+              "iconCls": "icon_room",
+              "sortNo": 101,
+              "status": "1",
+              "remark": ""
+            },
+            "children": []
+          },
+          {
+            "text": "检查项目管理",
+            "iconCls": "icon_item",
+            "leaf": true,
+            "permission": {
+              "permissionId": 102,
+              "parentId": 1,
+              "permissionCode": "inspectionitem:view",
+              "permissionName": "检查项目管理",
+              "permissionType": "0",
+              "url": "masterdata/inspectionItem/index",
+              "iconCls": "icon_item",
+              "sortNo": 102,
+              "status": "1",
+              "remark": ""
+            },
+            "children": []
+          },
+          {
+            "text": "运送项目管理",
+            "iconCls": "icon_item",
+            "leaf": true,
+            "permission": {
+              "permissionId": 103,
+              "parentId": 1,
+              "permissionCode": "transferitem:view",
+              "permissionName": "运送项目管理",
+              "permissionType": "0",
+              "url": "masterdata/transferItem/index",
+              "iconCls": "icon_item",
+              "sortNo": 103,
+              "status": "1",
+              "remark": ""
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "text": "运送管理",
+        "iconCls": "",
+        "leaf": false,
+        "permission": {
+          "permissionId": 2,
+          "parentId": null,
+          "permissionCode": "transfer",
+          "permissionName": "运送管理",
+          "permissionType": "0",
+          "url": "",
+          "iconCls": "",
+          "sortNo": 2,
+          "status": "1",
+          "remark": ""
+        },
+        "children": [
+          {
+            "text": "调度管理",
+            "iconCls": "icon_timer",
+            "leaf": true,
+            "permission": {
+              "permissionId": 201,
+              "parentId": 2,
+              "permissionCode": "schedule:view",
+              "permissionName": "调度管理",
+              "permissionType": "0",
+              "url": "transfer/schedule/index",
+              "iconCls": "icon_timer",
+              "sortNo": 201,
+              "status": "1",
+              "remark": ""
+            },
+            "children": []
+          },
+          {
+            "text": "运送任务查询",
+            "iconCls": "icon_query",
+            "leaf": true,
+            "permission": {
+              "permissionId": 202,
+              "parentId": 2,
+              "permissionCode": "transfertask:view",
+              "permissionName": "运送任务查询",
+              "permissionType": "0",
+              "url": "transfer/transferTask/index",
+              "iconCls": "icon_query",
+              "sortNo": 202,
+              "status": "1",
+              "remark": ""
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "text": "统计报表",
+        "iconCls": "",
+        "leaf": false,
+        "permission": {
+          "permissionId": 3,
+          "parentId": null,
+          "permissionCode": "stat",
+          "permissionName": "统计报表",
+          "permissionType": "0",
+          "url": "",
+          "iconCls": "",
+          "sortNo": 3,
+          "status": "1",
+          "remark": ""
+        },
+        "children": [
+          {
+            "text": "按月运送员工作效率情况表",
+            "iconCls": "icon_bar",
+            "leaf": true,
+            "permission": {
+              "permissionId": 301,
+              "parentId": 3,
+              "permissionCode": "report1:view",
+              "permissionName": "按月运送员工作效率情况表",
+              "permissionType": "0",
+              "url": "stat/report/report1Index",
+              "iconCls": "icon_bar",
+              "sortNo": 301,
+              "status": "1",
+              "remark": ""
+            },
+            "children": []
+          },
+          {
+            "text": "按月调度员工作效率汇总表",
+            "iconCls": "icon_bar",
+            "leaf": true,
+            "permission": {
+              "permissionId": 302,
+              "parentId": 3,
+              "permissionCode": "report2:view",
+              "permissionName": "按月调度员工作效率汇总表",
+              "permissionType": "0",
+              "url": "stat/report/report2Index",
+              "iconCls": "icon_bar",
+              "sortNo": 302,
+              "status": "1",
+              "remark": ""
+            },
+            "children": []
+          },
+          {
+            "text": "运送取消工作量统计",
+            "iconCls": "icon_bar",
+            "leaf": true,
+            "permission": {
+              "permissionId": 303,
+              "parentId": 3,
+              "permissionCode": "report3:view",
+              "permissionName": "运送取消工作量统计",
+              "permissionType": "0",
+              "url": "stat/report/report3Index",
+              "iconCls": "icon_bar",
+              "sortNo": 303,
+              "status": "1",
+              "remark": ""
+            },
+            "children": []
+          },
+          {
+            "text": "按月每天按始发科室统计",
+            "iconCls": "icon_bar",
+            "leaf": true,
+            "permission": {
+              "permissionId": 304,
+              "parentId": 3,
+              "permissionCode": "report4:view",
+              "permissionName": "按月每天按始发科室统计",
+              "permissionType": "0",
+              "url": "stat/report/report4Index",
+              "iconCls": "icon_bar",
+              "sortNo": 304,
+              "status": "1",
+              "remark": ""
+            },
+            "children": []
+          },
+          {
+            "text": "按月每小时按始发科室统计",
+            "iconCls": "icon_bar",
+            "leaf": true,
+            "permission": {
+              "permissionId": 305,
+              "parentId": 3,
+              "permissionCode": "report5:view",
+              "permissionName": "按月每小时按始发科室统计",
+              "permissionType": "0",
+              "url": "stat/report/report5Index",
+              "iconCls": "icon_bar",
+              "sortNo": 305,
+              "status": "1",
+              "remark": ""
+            },
+            "children": []
+          },
+          {
+            "text": "按月按运送类型统计",
+            "iconCls": "icon_bar",
+            "leaf": true,
+            "permission": {
+              "permissionId": 306,
+              "parentId": 3,
+              "permissionCode": "report6:view",
+              "permissionName": "按月按运送类型统计",
+              "permissionType": "0",
+              "url": "stat/report/report6Index",
+              "iconCls": "icon_bar",
+              "sortNo": 306,
+              "status": "1",
+              "remark": ""
+            },
+            "children": []
+          },
+          {
+            "text": "按月每天按运送类型统计",
+            "iconCls": "icon_bar",
+            "leaf": true,
+            "permission": {
+              "permissionId": 307,
+              "parentId": 3,
+              "permissionCode": "report7:view",
+              "permissionName": "按月每天按运送类型统计",
+              "permissionType": "0",
+              "url": "stat/report/report7Index",
+              "iconCls": "icon_bar",
+              "sortNo": 307,
+              "status": "1",
+              "remark": ""
+            },
+            "children": []
+          },
+          {
+            "text": "按月每小时按运送类型统计",
+            "iconCls": "icon_bar",
+            "leaf": true,
+            "permission": {
+              "permissionId": 308,
+              "parentId": 3,
+              "permissionCode": "report8:view",
+              "permissionName": "按月每小时按运送类型统计",
+              "permissionType": "0",
+              "url": "stat/report/report8Index",
+              "iconCls": "icon_bar",
+              "sortNo": 308,
+              "status": "1",
+              "remark": ""
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "text": "租借管理",
+        "iconCls": "",
+        "leaf": false,
+        "permission": {
+          "permissionId": 4,
+          "parentId": null,
+          "permissionCode": "lease",
+          "permissionName": "租借管理",
+          "permissionType": "0",
+          "url": "",
+          "iconCls": "",
+          "sortNo": 4,
+          "status": "1",
+          "remark": ""
+        },
+        "children": [
+          {
+            "text": "租借管理",
+            "iconCls": "icon_wheelchair",
+            "leaf": true,
+            "permission": {
+              "permissionId": 401,
+              "parentId": 4,
+              "permissionCode": "lease:view",
+              "permissionName": "租借管理",
+              "permissionType": "0",
+              "url": "lease/lease/index",
+              "iconCls": "icon_wheelchair",
+              "sortNo": 401,
+              "status": "1",
+              "remark": ""
+            },
+            "children": []
+          }
+        ]
+      },
+      {
+        "text": "系统管理",
+        "iconCls": "",
+        "leaf": false,
+        "permission": {
+          "permissionId": 9,
+          "parentId": null,
+          "permissionCode": "system",
+          "permissionName": "系统管理",
+          "permissionType": "0",
+          "url": "",
+          "iconCls": "",
+          "sortNo": 9,
+          "status": "1",
+          "remark": ""
+        },
+        "children": [
+          {
+            "text": "组织机构管理",
+            "iconCls": "icon_organization",
+            "leaf": true,
+            "permission": {
+              "permissionId": 901,
+              "parentId": 9,
+              "permissionCode": "organization:view",
+              "permissionName": "组织机构管理",
+              "permissionType": "0",
+              "url": "system/organization/index",
+              "iconCls": "icon_organization",
+              "sortNo": 901,
+              "status": "1",
+              "remark": ""
+            },
+            "children": []
+          },
+          {
+            "text": "用户管理",
+            "iconCls": "icon_user",
+            "leaf": true,
+            "permission": {
+              "permissionId": 902,
+              "parentId": 9,
+              "permissionCode": "user:view",
+              "permissionName": "用户管理",
+              "permissionType": "0",
+              "url": "system/user/index",
+              "iconCls": "icon_user",
+              "sortNo": 902,
+              "status": "1",
+              "remark": ""
+            },
+            "children": []
+          },
+          {
+            "text": "角色管理",
+            "iconCls": "icon_role",
+            "leaf": true,
+            "permission": {
+              "permissionId": 903,
+              "parentId": 9,
+              "permissionCode": "role:view",
+              "permissionName": "角色管理",
+              "permissionType": "0",
+              "url": "system/role/index",
+              "iconCls": "icon_role",
+              "sortNo": 903,
+              "status": "1",
+              "remark": ""
+            },
+            "children": []
+          },
+          {
+            "text": "权限管理",
+            "iconCls": "icon_permission",
+            "leaf": true,
+            "permission": {
+              "permissionId": 904,
+              "parentId": 9,
+              "permissionCode": "permission:view",
+              "permissionName": "权限管理",
+              "permissionType": "0",
+              "url": "system/permission/index",
+              "iconCls": "icon_permission",
+              "sortNo": 904,
+              "status": "1",
+              "remark": ""
+            },
+            "children": []
+          },
+          {
+            "text": "参数管理",
+            "iconCls": "icon_config",
+            "leaf": true,
+            "permission": {
+              "permissionId": 905,
+              "parentId": 9,
+              "permissionCode": "param:view",
+              "permissionName": "参数管理",
+              "permissionType": "0",
+              "url": "system/param/index",
+              "iconCls": "icon_config",
+              "sortNo": 905,
+              "status": "1",
+              "remark": ""
+            },
+            "children": []
+          },
+          {
+            "text": "字典管理",
+            "iconCls": "icon_dictionary",
+            "leaf": true,
+            "permission": {
+              "permissionId": 906,
+              "parentId": 9,
+              "permissionCode": "dictionary:view",
+              "permissionName": "字典管理",
+              "permissionType": "0",
+              "url": "system/dict/index",
+              "iconCls": "icon_dictionary",
+              "sortNo": 906,
+              "status": "1",
+              "remark": ""
+            },
+            "children": []
+          },
+          {
+            "text": "定时任务管理",
+            "iconCls": "icon_timer",
+            "leaf": true,
+            "permission": {
+              "permissionId": 907,
+              "parentId": 9,
+              "permissionCode": "quartz:view",
+              "permissionName": "定时任务管理",
+              "permissionType": "0",
+              "url": "system/quartz/index",
+              "iconCls": "icon_timer",
+              "sortNo": 907,
+              "status": "1",
+              "remark": ""
+            },
+            "children": []
+          }
+        ]
+      }
+    ],
+    "buttonPermissions": [
+      "department:add",
+      "department:modify",
+      "department:delete",
+      "department:print",
+      "inspectionitem:add",
+      "inspectionitem:modify",
+      "inspectionitem:delete",
+      "transferitem:add",
+      "transferitem:modify",
+      "transferitem:delete",
+      "lease:add",
+      "lease:modify",
+      "lease:delete",
+      "organization:add",
+      "organization:modify",
+      "organization:delete",
+      "organization:authorization",
+      "user:add",
+      "user:modify",
+      "user:delete",
+      "user:authorization",
+      "user:password",
+      "user:organization",
+      "role:add",
+      "role:modify",
+      "role:delete",
+      "role:authorization",
+      "permission:add",
+      "permission:modify",
+      "permission:delete",
+      "param:add",
+      "param:modify",
+      "param:delete",
+      "dictionary:add",
+      "dictionary:modify",
+      "dictionary:delete",
+      "quartz:add",
+      "quartz:modify",
+      "quartz:delete"
+    ]
+  }
+}

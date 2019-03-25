@@ -1,0 +1,17 @@
+page-about {
+  .version_label_class {
+    overflow:hidden;
+    text-overflow:ellipsis;
+    height:3.2rem;
+    line-height: 3.2rem;
+  }
+
+  .version_class {
+    float: right;
+    color: #666666;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    height:3.2rem;
+    line-height: 3.2rem;
+  }
+}

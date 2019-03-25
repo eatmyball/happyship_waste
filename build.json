@@ -1,0 +1,11 @@
+{
+    "android": {
+        "release": {
+            "keystore": "./my-release-key.jks",
+            "storePassword": "Csvw1234",
+            "alias": "my-alias",
+            "password" : "Csvw1234",
+            "keystoreType": ""
+        }
+    }
+}

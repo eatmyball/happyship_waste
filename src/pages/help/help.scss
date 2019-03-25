@@ -1,0 +1,139 @@
+page-help {
+@media screen and (min-width:321px) and (max-width:375px){html{font-size:11px}} 
+@media screen and (min-width:376px) and (max-width:414px){html{font-size:12px}} 
+@media screen and (min-width:415px) and (max-width:639px){html{font-size:15px}} 
+@media screen and (min-width:640px) and (max-width:719px){html{font-size:20px}} 
+@media screen and (min-width:720px) and (max-width:749px){html{font-size:22.5px}} 
+@media screen and (min-width:750px) and (max-width:799px){html{font-size:23.5px}} 
+@media screen and (min-width:800px){html{font-size:25px}}
+* {
+	margin: 0;
+	padding: 0;
+}
+//html{
+//	//font-size:10px;
+//	//margin-left: 6%;
+//	//margin-right: 10px;
+//	-ms-text-size-adjust:100%;
+//	-webkit-text-size-adjust:100%;
+//	line-height:1.6;
+//} 
+//body{
+//	-webkit-touch-callout:none;
+//	font-family:-apple-system-font,"Droid Sans Fallback","Helvetica Neue","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+//	//background-color:#f3f3f3;
+//	line-height:inherit
+//}
+.container {
+	margin-left: 1.8em;
+	margin-right: 1.8em;
+}
+.logo img {
+	width: 24%;
+}
+.version {
+	//text-align: center;
+	font-family: 'Noto Sans SC','ProximaNovaSoft',sans-serif;
+	color: #797979;
+}
+
+span {
+	display: inline-block;
+}
+.header_each {
+	margin-top: 10px;
+	margin-bottom: 10px; 
+	text-align: center;  
+	box-sizing: border-box;
+}
+.nameOne,.nameTwo {
+	font-weight: 400;
+}
+p {
+	white-space: normal; 
+	box-sizing: border-box;
+}
+strong span {
+	font-size: 18px; 
+	//box-sizing: border-box;
+	letter-spacing:1.5px;
+	line-height: 2;
+	font-weight: 500;
+}
+strong span span {
+	font-size: 16px; 
+	//box-sizing: border-box;
+	letter-spacing:1.5px;
+	line-height: 2;
+	font-weight: 500;
+}
+strong span span span , .lowestHead{
+	font-size: 14px; 
+	//box-sizing: border-box;
+	letter-spacing:1.5px;
+	line-height: 2;
+	//font-weight: bold;
+	font-weight: 500;
+}
+.line {
+	margin-top: 10px; 
+	margin-bottom: 10px;  
+	box-sizing: border-box; 
+}
+.lineHead {
+	padding-left: 1em; padding-right: 1em; display: inline-block; text-align: center; box-sizing: border-box;
+}
+.lineHead span {
+	display: inline-block; padding: 0.2em 0.5em; border-radius: 0.5em; background-color: rgb(45, 169, 109); font-size: 14px; color: rgb(255, 255, 255); box-sizing: border-box;
+}
+.lineCon {
+	border-width: 1px; border-style: solid; border-color: rgb(192, 200, 209); margin-top: -1em; padding: 20px 10px 10px; background-color: rgb(239, 239, 239); text-align: center; box-sizing: border-box;
+}
+table {
+	margin:auto;
+	margin-top: 20px;
+	margin-bottom:40px;
+	text-align: center;
+}
+.tableInfoChange th,td {
+	width: 20%;
+	height: 26px;
+}
+.prefaceHeader,	.directoryHead, .eachHead {
+	text-align: center; 
+	letter-spacing:1.5px;
+	font-size: 20px;
+}
+.preCon,.summary {
+	letter-spacing: 1.5px;
+}
+.directory strong span {
+	margin-left: 10px;
+}
+.directory strong span span {
+	margin-left: 15px;
+}
+.eachDirectoryHead {
+	letter-spacing:1.5px;
+	font-size: 20px;
+}
+
+.mainContent {
+	font-size: 14px;
+	//text-indent:2em;
+	text-align: justify;
+	letter-spacing:1.5px;
+	line-height: 2em;
+}
+
+
+.imgCenter {
+	text-align: center;
+	width: 100%
+}
+
+
+img {
+	max-width:55%;
+}
+}
