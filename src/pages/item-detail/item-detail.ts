@@ -199,19 +199,14 @@ export class ItemDetailPage {
         loader.present();
         //console.log(item.billNo);
         this.service.updateTransferTaskStatus(item.billNo, data.note, this.service.getCurrentUser()).subscribe((data) => {
+            console.log('API OUTPUT:' + JSON.stringify(data));
             if (data.success === true) {
                 loader.dismiss();
                 this.viewCtrl.dismiss({type: i});
 
             } else {
-                let message = '';
-                if (data.MSG.item instanceof Array) {
-                    for (let i = 0; i < data.MSG.item.length; i++) {
-                        message += data.MSG.item[i].MESSAGE + '<br/>';
-                    }
-                } else {
-                    message = data.MSG.item.MESSAGE;
-                }
+                let message = '操作失败，请稍候再试.';
+                
                 let alert = this.alertCtrl.create({
                     title: '错误',
                     message: message,

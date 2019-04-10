@@ -22,13 +22,14 @@ import { LoadingController, AlertController } from 'ionic-angular';
 export class Service {
 
     //config*********************************************************
-    version = "1.0.0(20190312001)";
+    version = "1.0.1(20190410001)";
     mode = "test";//dev, test, prod
     dev = "dev";
     test = "test";
     prod = "prod";
     devPrefix = "/apid";
-    testPrefix = "http://happyship.wisebox.com.cn/happyship";
+    testPrefix = "http://happyship.wisebox.com.cn:8080/happyship";
+    // testPrefix = "http://172.28.112.208:8080/yozan"
     // testPrefix = "http://transport.shyozan.com/yozantest";
     // prodPrefix = "http://hrwechat-qas.svw.cn";
     prodPrefix = "http://transport.shyozan.com/";
@@ -158,7 +159,7 @@ export class Service {
 
     //登出系统
     doLogout() {
-        //this.storage.remove(this.encrypt("userid"));
+        this.storage.remove(this.encrypt("userid"));
         //设置离线
         this.updateUserStatus(false).subscribe((data)=>{
             if(data.success === true) {
