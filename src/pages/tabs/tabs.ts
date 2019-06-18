@@ -19,7 +19,7 @@ export class TabsPage {
   // should be each tab's root Page
   firsttime = true;
   @ViewChild('mainTabs') tabs:Tabs;
-  tab2Root: any = ItemListPage;
+  tab2Root: any = 'WorkbenchPage';
   tab3Root: any = MyPage;
 
   params = {

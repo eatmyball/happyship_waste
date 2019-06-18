@@ -1,3 +1,4 @@
+import { WasteBagObj } from './../../pages/workbench/workbench';
 /*
   Description: 数据服务
   Author: ZhuChenjie
@@ -22,7 +23,7 @@ import { LoadingController, AlertController } from 'ionic-angular';
 export class Service {
 
     //config*********************************************************
-    version = "1.0.1(20190410001)";
+    version = "1.0.2(20190618001)";
     mode = "test";//dev, test, prod
     dev = "dev";
     test = "test";
@@ -157,6 +158,59 @@ export class Service {
         }).timeout(this.timeout).map(res => res.json());
     }
 
+    //根据科室编号获取科室名称
+    getDepartmentNameByCode(code:string) {
+        let url = this.getUrl('getDepartmentName');
+        let authHeader = new Headers();
+        authHeader.append('Content-Type', 'application/x-www-form-urlencoded');
+        let body = new URLSearchParams();
+        body.append("departmentCode", code);
+        return this.http.post(url, body, {
+            headers: authHeader,
+        }).timeout(this.timeout).map(res => res.json());
+    }
+
+    //创建医废运送任务
+    createMedicalWasteTranferTask(bagId,locationCode) {
+        let url = this.getUrl('newWasteTask');
+        let authHeader = new Headers();
+        authHeader.append('Content-Type', 'application/x-www-form-urlencoded');
+        let body = new URLSearchParams();
+        body.append("bagNo", bagId);
+        body.append("locationCode", locationCode);
+        body.append("startUser", this.getCurrentUser());
+        return this.http.post(url, body, {
+            headers: authHeader,
+        }).timeout(this.timeout).map(res => res.json());
+    }
+
+    //修改医废运送任务重量
+    updateMedicalWasteTranferTask(bag:WasteBagObj) {
+        let url = this.getUrl('updateWasteTaskWeight');
+        let authHeader = new Headers();
+        authHeader.append('Content-Type', 'application/x-www-form-urlencoded');
+        let body = new URLSearchParams();
+        body.append("taskNo", bag.taskId);
+        body.append("weight", bag.weight+'');
+        body.append("category",bag.category);
+        return this.http.post(url, body, {
+            headers: authHeader,
+        }).timeout(this.timeout).map(res => res.json());
+    }
+
+    //查询医废运送任务列表
+    getMedicalWasteTransferList() {
+        let url = this.getUrl('getWasteTask');
+        let authHeader = new Headers();
+        authHeader.append('Content-Type', 'application/x-www-form-urlencoded');
+        let body = new URLSearchParams();
+        body.append("date", Service.formatDateYYYYMMDD(new Date().getTime()));
+        body.append("startUser", this.getCurrentUser());
+        return this.http.post(url, body, {
+            headers: authHeader,
+        }).timeout(this.timeout).map(res => res.json());
+    }
+
     //登出系统
     doLogout() {
         this.storage.remove(this.encrypt("userid"));
@@ -171,6 +225,8 @@ export class Service {
         this.user = null;
         this.activeUser.next(null);
     }
+
+    
 
     saveUser(userid, password) {
         this.storage.set(this.encrypt("userid"), this.encrypt(userid));
@@ -339,6 +395,26 @@ export class Service {
                 return this.getUrlPrefix() + "/transfer/app/listTransferTaskByOperator";
             case 'updateUserStatus':
                 return this.getUrlPrefix() + "/transfer/app/updateUserStatus";
+            case 'getDepartmentName':
+                return this.getUrlPrefix() + "/transfer/app/getDepartmentName";
+            case 'newWasteTask':
+                return this.getUrlPrefix() + "/transfer/app/newWasteTask";
+            case 'getWasteTask':
+                return this.getUrlPrefix() + '/transfer/app/getWasteTask';
+            case 'updateWasteTaskWeight':
+                return this.getUrlPrefix() + '/transfer/app/updateWasteTaskWeight';
         }
+    }
+
+     /**
+     * 转换时间格式为YYYY-MM-DD
+     */
+    static formatDateYYYYMMDD(time: number): string {
+        const Dates = new Date(time);
+        const year: number = Dates.getFullYear();
+        const month: any = (Dates.getMonth() + 1) < 10 ? '0' + (Dates.getMonth() + 1) : (Dates.getMonth() + 1);
+        const day: any = Dates.getDate() < 10 ? '0' + Dates.getDate() : Dates.getDate();
+        const result = year + '' + month + '' + day;
+        return result;
     }
 }

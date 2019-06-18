@@ -1,0 +1,87 @@
+<!--
+  Generated template for the WorkbenchPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+  <ion-navbar>
+    <ion-title>我的工作台</ion-title>
+  </ion-navbar>
+
+</ion-header>
+<ion-content>
+  <ion-refresher (ionRefresh)="doRefresh($event)">
+    <ion-refresher-content pullingIcon="arrow-dropdown" pullingText="下拉刷新" refreshingSpinner="circles"
+      refreshingText="加载中...">
+    </ion-refresher-content>
+  </ion-refresher>
+  <div style="padding:10px;display:flex;align-items: center; justify-content: space-between" >
+    <div style="color: #000;font-weight: bold;font-size: 16sp;">科室信息:</div>
+    <button ion-button small (click)="scan2Start()" style="min-width:95px"><ion-icon small name="ios-qr-scanner"></ion-icon>&nbsp;扫科室</button>
+  </div>
+  <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #aaa">
+    <div class="div-depart-name">当前科室:{{currentDeptName}}</div>
+    <div class="div-depart-name">科室编号:{{currentDeptId}}</div>
+  </div>
+  <div style="padding:10px;display:flex;align-items: center; justify-content: space-between" >
+    <div style="color: #000;font-weight: bold;font-size: 16sp;">任务信息:</div>
+    <button ion-button small (click)="scan2Start()" style="min-width:95px"><ion-icon small name="ios-qr-scanner"></ion-icon>&nbsp;扫垃圾袋</button>
+  </div>
+  <div class="div-bags-item">
+    <div class="div-bag-text" *ngIf="currentBag.bagId">垃圾袋:{{currentBag.bagId}}</div>
+    <div class="div-bag-text" *ngIf="!currentBag.bagId">请扫描垃圾袋</div>
+    <div style="display:flex;align-items: center">
+      <input class="ion-ipnut-weight" type="text" placeholder="重量" type="number" [(ngModel)]="currentBag.weight"
+        (ngModelChange)="onInputDataChanged($event,currentBag)" />
+      <div class="div-bag-weight">kg</div>
+      
+    </div>
+  </div>
+  <div class="div-bags-item">
+    <div style="display: flex;align-items: center">
+      <div style="color: #333;font-size: 14sp;">垃圾类型:</div>  
+      <div *ngFor="let item of bagCategory" [ngClass]="item.isChecked? 'div-check-item-checked':'div-check-item-default'"
+        (click)="onCheckItemClicked(item.title)">
+        {{item.title}}
+        </div>
+    </div>
+    <button class="ion-button-submit" ion-button small color="primary" [disabled]="currentBag.isDisable"
+    (click)="onSubmitClicked()">提交</button>
+  </div>
+  <div style="width:100%; height:2px; border-bottom: 1px solid #aaa;"></div>
+
+  <div style="width: 100%; display: flex; align-items: center;justify-content: center">
+    <div
+      style="padding:5px 10px; border-radius: 8px; background-color: #999; color: white;font-size: 16sp;margin-top: 20px;">
+      历史记录
+    </div>
+  </div>
+    <ion-list *ngIf="todayTasks.length > 0">
+      <div *ngFor="let item of todayTasks" class="div-list-item" (click)="onListItemClick(item)">
+        <div
+          style="width:100%; padding:5px 0px; display: flex; color: #333;font-size: 14sp; align-items: center; justify-content: space-between;">
+          <div>
+            垃圾袋:{{item.bagId}}
+          </div>
+          <div>
+            科室:{{item.departName}}
+          </div>
+        </div>
+        <div
+          style="width:100%; padding:5px 0px; display: flex; color: #666;font-size: 14sp; align-items: center; justify-content: space-between;">
+          <div>分类:{{item.category}}</div>
+          <div>重量:{{item.weight}}kg</div>
+          <div>日期:{{item.date}}</div>
+        </div>
+      </div>
+    </ion-list>
+    <div *ngIf="!(todayTasks.length > 0)"
+      style="width: 100%; display: flex; align-items: center;justify-content: center;margin-top: 20px;">
+      <div>
+        暂无数据
+      </div>
+    </div>
+
+</ion-content>

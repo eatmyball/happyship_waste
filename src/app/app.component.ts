@@ -30,7 +30,7 @@ export class MyApp {
     constructor(public platform: Platform, public ionicApp: IonicApp, private service: Service,private toastCtrl: ToastController, private keyboard: Keyboard, public alertCtrl: AlertController, public loadingCtrl: LoadingController, public renderer: Renderer, storage: Storage, private iab: InAppBrowser, private splash:SplashScreen) {
         platform.ready().then(() => {
             StatusBar.styleDefault();
-            this.initJPush();
+            // this.initJPush();
             this.registerBackButtonAction();//注册返回按键事件
             this.doInit();
             this.splash.hide();
@@ -63,11 +63,11 @@ export class MyApp {
                     }
                 });
                 //记录推送alias
-                (<any>window).JPush.setAlias({sequence:1, alias: user.LoginID}, (result)=>{
-                    console.log('Jpush set alias success');
-                }, (error)=>{
-                    console.log('Jpush set alias failed:'+error.code);
-                });
+                // (<any>window).JPush.setAlias({sequence:1, alias: user.LoginID}, (result)=>{
+                //     console.log('Jpush set alias success');
+                // }, (error)=>{
+                //     console.log('Jpush set alias failed:'+error.code);
+                // });
                 
             } else {
                 this.rootPage = LoginPage;
@@ -112,31 +112,31 @@ export class MyApp {
     }
 
     //极光推送初始化
-  initJPush() {
-    (<any>window).JPush.init();
-    //注册推送回调事件
-    setTimeout(() => {
-      this.registePushEvent();
-    }, 1000);
-    (<any>window).JPush.setDebugMode(true); //打印极光日志
+//   initJPush() {
+//     (<any>window).JPush.init();
+//     //注册推送回调事件
+//     setTimeout(() => {
+//       this.registePushEvent();
+//     }, 1000);
+//     (<any>window).JPush.setDebugMode(true); //打印极光日志
 
-  }
+//   }
 
-  registePushEvent() {
-    (<any>window).JPush.getRegistrationID((rId) => {
-      console.log("jpush ID"+rId);
-    });
+//   registePushEvent() {
+//     (<any>window).JPush.getRegistrationID((rId) => {
+//       console.log("jpush ID"+rId);
+//     });
 
-    document.addEventListener("jpush.openNotification", (event) => {
-        console.log("Jpush Open:"+JSON.stringify(event));
-    }, false);
+//     document.addEventListener("jpush.openNotification", (event) => {
+//         console.log("Jpush Open:"+JSON.stringify(event));
+//     }, false);
 
-    document.addEventListener("jpush.receiveMessage", (event) => {
-        console.log("Jpush Message:" +JSON.stringify(event));
-    }, false);
-    //收到推送
-    document.addEventListener("jpush.receiveNotification", (event) => {
-        console.log("Jpush receive Noti:"+JSON.stringify(event));
-    }, false);
-  }
+//     document.addEventListener("jpush.receiveMessage", (event) => {
+//         console.log("Jpush Message:" +JSON.stringify(event));
+//     }, false);
+//     //收到推送
+//     document.addEventListener("jpush.receiveNotification", (event) => {
+//         console.log("Jpush receive Noti:"+JSON.stringify(event));
+//     }, false);
+//   }
 }
