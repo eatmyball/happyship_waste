@@ -72,7 +72,7 @@ export class WorkbenchPage {
             bag.bagId = result['data'][item]['bagNo'];
             bag.departId = result['data'][item]['locationCode'];
             bag.departName = result['data'][item]['locationName'];
-            bag.date = result['data'][item]['startTime'];
+            bag.date = result['data'][item]['weightTime'];
             bag.category = result['data'][item]['category'];
             bag.weight = result['data'][item]['weight'];
             bag.taskId = result['data'][item]['taskNo'];
@@ -163,7 +163,7 @@ export class WorkbenchPage {
   }
 
   onSubmitClicked() {
-    if(this.currentBag.weight > 0) {
+    if(this.currentBag.weight > 0&&this.checkNumbs(this.currentBag.weight)) {
       this.loading = this.loadingCtrl.create({
         content:'正在提交中，请稍候...',
         duration:500
@@ -185,7 +185,7 @@ export class WorkbenchPage {
     }else {
       let alert = this.alertCtrl.create({
         title: "提示",
-        message: "请输入重量",
+        message: "请输入正确的重量",
         buttons: ["确定"]
       });
       alert.present();
@@ -201,6 +201,7 @@ export class WorkbenchPage {
         this.currentBag.departId = locationCode;
         this.currentBag.departName = deptName;
         this.currentBag.taskId = result['data'];
+        this.currentBag.category = 'A';
         this.currentBag.isDisable = false;
       }else {
         let alert = this.alertCtrl.create({
@@ -266,7 +267,7 @@ export class WorkbenchPage {
 
   onListItemClick(bag: WasteBagObj) {
     bag.isDisable = true;
-    this.currentBag = bag;
+    Object.assign(this.currentBag, bag) ;
   }
 
   onCheckItemClicked(title:string) {
@@ -278,6 +279,11 @@ export class WorkbenchPage {
           category.isChecked = false;
         }
       }
+  }
+
+  checkNumbs(num:number):boolean {
+      let reg = /^\d+(\.\d+)?$/g;
+      return reg.test(num+'');
   }
 
 }
