@@ -24,11 +24,11 @@ export class WorkbenchPage {
   currentDeptName: string = '';
   currentDeptId: string = '';
 
-  bagCategory = [{title:'A',isChecked:true},
-  {title:'B',isChecked:false},
-  {title:'C',isChecked:false},
-  {title:'D',isChecked:false},
-  {title:'E',isChecked:false}];
+  bagCategory = [{title:'A化',value:'A',isChecked:true},
+  {title:'B损',value:'B',isChecked:false},
+  {title:'C感',value:'C',isChecked:false},
+  {title:'D病',value:'D',isChecked:false},
+  {title:'E药',value:'E',isChecked:false}];
 
   currentBag: WasteBagObj = new WasteBagObj();
   todayTasks: WasteBagObj[] = [];
@@ -270,11 +270,11 @@ export class WorkbenchPage {
     Object.assign(this.currentBag, bag) ;
   }
 
-  onCheckItemClicked(title:string) {
+  onCheckItemClicked(value:string) {
       for(let category of this.bagCategory) {
-        if(title == category.title) {
+        if(value == category.value) {
           category.isChecked = true;
-          this.currentBag.category = title;
+          this.currentBag.category = value;
         }else {
           category.isChecked = false;
         }

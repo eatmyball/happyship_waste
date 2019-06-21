@@ -40,10 +40,9 @@
     </div>
   </div>
   <div class="div-bags-item">
-    <div style="display: flex;align-items: center">
-      <div style="color: #333;font-size: 14sp;">垃圾类型:</div>  
+    <div style="display: flex;align-items: center"> 
       <div *ngFor="let item of bagCategory" [ngClass]="item.isChecked? 'div-check-item-checked':'div-check-item-default'"
-        (click)="onCheckItemClicked(item.title)">
+        (click)="onCheckItemClicked(item.value)">
         {{item.title}}
         </div>
     </div>
