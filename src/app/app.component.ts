@@ -62,12 +62,7 @@ export class MyApp {
                     console.log('update user status success:'+JSON.stringify(data));
                     }
                 });
-                //记录推送alias
-                // (<any>window).JPush.setAlias({sequence:1, alias: user.LoginID}, (result)=>{
-                //     console.log('Jpush set alias success');
-                // }, (error)=>{
-                //     console.log('Jpush set alias failed:'+error.code);
-                // });
+                
                 
             } else {
                 this.rootPage = LoginPage;
@@ -111,32 +106,4 @@ export class MyApp {
         }
     }
 
-    //极光推送初始化
-//   initJPush() {
-//     (<any>window).JPush.init();
-//     //注册推送回调事件
-//     setTimeout(() => {
-//       this.registePushEvent();
-//     }, 1000);
-//     (<any>window).JPush.setDebugMode(true); //打印极光日志
-
-//   }
-
-//   registePushEvent() {
-//     (<any>window).JPush.getRegistrationID((rId) => {
-//       console.log("jpush ID"+rId);
-//     });
-
-//     document.addEventListener("jpush.openNotification", (event) => {
-//         console.log("Jpush Open:"+JSON.stringify(event));
-//     }, false);
-
-//     document.addEventListener("jpush.receiveMessage", (event) => {
-//         console.log("Jpush Message:" +JSON.stringify(event));
-//     }, false);
-//     //收到推送
-//     document.addEventListener("jpush.receiveNotification", (event) => {
-//         console.log("Jpush receive Noti:"+JSON.stringify(event));
-//     }, false);
-//   }
 }

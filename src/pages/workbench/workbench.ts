@@ -1,3 +1,4 @@
+import { Broadcaster } from '@ionic-native/broadcaster/ngx';
 import { Service } from './../../providers/piservice/service';
 import { ViewChild } from '@angular/core';
 import { ZBarOptions } from '@ionic-native/zbar';
@@ -20,36 +21,39 @@ import { LoginPage } from '../login/login';
 })
 export class WorkbenchPage {
 
+  plus: any;
+
   @ViewChild(Refresher) refresher: Refresher;
   currentDeptName: string = '';
   currentDeptId: string = '';
 
-  bagCategory = [{title:'A化',value:'A',isChecked:true},
-  {title:'B损',value:'B',isChecked:false},
-  {title:'C感',value:'C',isChecked:false},
-  {title:'D病',value:'D',isChecked:false},
-  {title:'E药',value:'E',isChecked:false}];
+  bagCategory = [{ title: 'A感', value: 'A', isChecked: true },
+  { title: 'B损', value: 'B', isChecked: false },
+  { title: 'C化', value: 'C', isChecked: false },
+  { title: 'D病', value: 'D', isChecked: false },
+  { title: 'E药', value: 'E', isChecked: false }];
 
   currentBag: WasteBagObj = new WasteBagObj();
   todayTasks: WasteBagObj[] = [];
-  loading:Loading;
+  loading: Loading;
 
   constructor(public navCtrl: NavController,
     public navParams: NavParams,
     private zbar: ZBar,
     private alertCtrl: AlertController,
     public toastCtrl: ToastController,
-    private loadingCtrl:LoadingController,
-    private service: Service
+    private loadingCtrl: LoadingController,
+    private service: Service,
+    private broadcaster:Broadcaster
   ) {
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad WorkbenchPage');
     this.loading = this.loadingCtrl.create({
-      content:'正在为您加载，请稍候...'
+      content: '正在为您加载，请稍候...'
     });
-    this.loading.present();    
+    this.loading.present();
     this.getTaskList();
   }
 
@@ -59,15 +63,15 @@ export class WorkbenchPage {
 
   getTaskList() {
     this.todayTasks = [];
-    this.service.getMedicalWasteTransferList().subscribe(result=>{
-      console.log('getMedicalWasteTransferList:'+JSON.stringify(result));
+    this.service.getMedicalWasteTransferList().subscribe(result => {
+      console.log('getMedicalWasteTransferList:' + JSON.stringify(result));
       this.refresher.complete();
-      if(this.loading) {
+      if (this.loading) {
         this.loading.dismiss();
       }
-      if(result) {
-        if(result['success']) {
-          for(let item in result['data']) {
+      if (result) {
+        if (result['success']) {
+          for (let item in result['data']) {
             let bag = new WasteBagObj();
             bag.bagId = result['data'][item]['bagNo'];
             bag.departId = result['data'][item]['locationCode'];
@@ -81,14 +85,14 @@ export class WorkbenchPage {
           }
         }
       }
-    },error=>{
-      console.log('getMedicalWasteTransferList:'+JSON.stringify(error));
+    }, error => {
+      console.log('getMedicalWasteTransferList:' + JSON.stringify(error));
       this.refresher.complete();
-      if(this.loading) {
+      if (this.loading) {
         this.loading.dismiss();
       }
     })
-    
+
   }
 
   scan2Start() {
@@ -113,8 +117,8 @@ export class WorkbenchPage {
             });
             alert.present();
           }
-          
-        } else{
+
+        } else {
           this.getDepartName(result);
         }
         console.log(result);
@@ -127,15 +131,15 @@ export class WorkbenchPage {
       });
   }
 
-  getDepartName(code:string) {
-    if(code) {
-      
-      this.service.getDepartmentNameByCode(code).subscribe(result=>{
-        console.log('getDepartmentNameByCode:'+JSON.stringify(result));
-        if(result&&result['success']) {
+  getDepartName(code: string) {
+    if (code) {
+
+      this.service.getDepartmentNameByCode(code).subscribe(result => {
+        console.log('getDepartmentNameByCode:' + JSON.stringify(result));
+        if (result && result['success']) {
           this.currentDeptName = result['data'];
           this.currentDeptId = code;
-        }else {
+        } else {
           let alert = this.alertCtrl.create({
             title: "提示",
             message: "请扫描正确的科室二维码",
@@ -143,16 +147,16 @@ export class WorkbenchPage {
           });
           alert.present();
         }
-      }, error=>{
+      }, error => {
 
         let alert = this.alertCtrl.create({
-                title: "提示",
-                message: "请扫描正确的科室二维码:"+JSON.stringify(error),
-                buttons: ["确定"]
-              });
-              alert.present();
+          title: "提示",
+          message: "请扫描正确的科室二维码:" + JSON.stringify(error),
+          buttons: ["确定"]
+        });
+        alert.present();
       });
-    }else {
+    } else {
       let alert = this.alertCtrl.create({
         title: "提示",
         message: "请扫描正确的科室二维码",
@@ -163,17 +167,26 @@ export class WorkbenchPage {
   }
 
   onSubmitClicked() {
-    if(this.currentBag.weight > 0&&this.checkNumbs(this.currentBag.weight)) {
+    if (this.currentBag.weight > 0 && this.checkNumbs(this.currentBag.weight)) {
       this.loading = this.loadingCtrl.create({
-        content:'正在提交中，请稍候...',
-        duration:500
+        content: '正在提交中，请稍候...',
+        duration: 500
       });
 
       this.loading.present();
       setTimeout(() => {
-        if(this.currentBag.taskId) {
-          this.updateWeight(this.currentBag);
-        }else {
+        if (this.currentBag.taskId) {
+          if (this.currentBag.category) {
+            this.updateWeight(this.currentBag);
+          } else {
+            let alert = this.alertCtrl.create({
+              title: "提示",
+              message: "请先选择垃圾类型!",
+              buttons: ["确定"]
+            });
+            alert.present();
+          }
+        } else {
           let alert = this.alertCtrl.create({
             title: "提示",
             message: "请先扫描垃圾袋!",
@@ -182,7 +195,7 @@ export class WorkbenchPage {
           alert.present();
         }
       }, 500);
-    }else {
+    } else {
       let alert = this.alertCtrl.create({
         title: "提示",
         message: "请输入正确的重量",
@@ -192,10 +205,10 @@ export class WorkbenchPage {
     }
   }
 
-  createTransferTask(bagID:string, locationCode:string, deptName:string) {
-    this.service.createMedicalWasteTranferTask(bagID,locationCode).subscribe(result=>{
-      console.log('createMedicalWasteTranferTask:'+JSON.stringify(result));
-      if(result['success']) {
+  createTransferTask(bagID: string, locationCode: string, deptName: string) {
+    this.service.createMedicalWasteTranferTask(bagID, locationCode).subscribe(result => {
+      console.log('createMedicalWasteTranferTask:' + JSON.stringify(result));
+      if (result['success']) {
         this.currentBag = new WasteBagObj();
         this.currentBag.bagId = bagID;
         this.currentBag.departId = locationCode;
@@ -203,28 +216,28 @@ export class WorkbenchPage {
         this.currentBag.taskId = result['data'];
         this.currentBag.category = 'A';
         this.currentBag.isDisable = false;
-      }else {
+      } else {
         let alert = this.alertCtrl.create({
           title: "提示",
-          message: "创建任务失败:"+result['data'],
+          message: "创建任务失败:" + result['data'],
           buttons: ["确定"]
         });
         alert.present();
       }
-    },error=>{
+    }, error => {
       let alert = this.alertCtrl.create({
         title: "提示",
-        message: "创建失败，请稍后重试:"+JSON.stringify(error),
+        message: "创建失败，请稍后重试:" + JSON.stringify(error),
         buttons: ["确定"]
       });
       alert.present();
     });
   }
 
-  updateWeight(bag:WasteBagObj) {
-    this.service.updateMedicalWasteTranferTask(bag).subscribe(result=>{
-      console.log('updateMedicalWasteTranferTask:'+JSON.stringify(result));
-      if(result['success']) {
+  updateWeight(bag: WasteBagObj) {
+    this.service.updateMedicalWasteTranferTask(bag).subscribe(result => {
+      console.log('updateMedicalWasteTranferTask:' + JSON.stringify(result));
+      if (result['success']) {
         let alert = this.alertCtrl.create({
           title: "提示",
           message: "提交成功!",
@@ -233,7 +246,7 @@ export class WorkbenchPage {
         alert.present();
         this.currentBag = new WasteBagObj();
         this.getTaskList();
-      }else {
+      } else {
         let alert = this.alertCtrl.create({
           title: "提示",
           message: "提交失败，请稍后重试",
@@ -241,10 +254,10 @@ export class WorkbenchPage {
         });
         alert.present();
       }
-    },error=>{
+    }, error => {
       let alert = this.alertCtrl.create({
         title: "提示",
-        message: "提交失败，请稍后重试:"+JSON.stringify(error),
+        message: "提交失败，请稍后重试:" + JSON.stringify(error),
         buttons: ["确定"]
       });
       alert.present();
@@ -267,23 +280,23 @@ export class WorkbenchPage {
 
   onListItemClick(bag: WasteBagObj) {
     bag.isDisable = true;
-    Object.assign(this.currentBag, bag) ;
+    Object.assign(this.currentBag, bag);
   }
 
-  onCheckItemClicked(value:string) {
-      for(let category of this.bagCategory) {
-        if(value == category.value) {
-          category.isChecked = true;
-          this.currentBag.category = value;
-        }else {
-          category.isChecked = false;
-        }
+  onCheckItemClicked(value: string) {
+    for (let category of this.bagCategory) {
+      if (value == category.value) {
+        category.isChecked = true;
+        this.currentBag.category = value;
+      } else {
+        category.isChecked = false;
       }
+    }
   }
 
-  checkNumbs(num:number):boolean {
-      let reg = /^\d+(\.\d+)?$/g;
-      return reg.test(num+'');
+  checkNumbs(num: number): boolean {
+    let reg = /^\d+(\.\d+)?$/g;
+    return reg.test(num + '');
   }
 
 }
