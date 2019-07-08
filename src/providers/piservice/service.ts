@@ -29,7 +29,7 @@ export class Service {
     test = "test";
     prod = "prod";
     devPrefix = "/apid";
-    testPrefix = "http://47.96.150.71/mw";
+    testPrefix = "http://47.96.150.71/mw/transfer/app";
     // testPrefix = "http://172.28.112.208:8080/yozan"
     // testPrefix = "http://transport.shyozan.com/yozantest";
     // prodPrefix = "http://hrwechat-qas.svw.cn";
