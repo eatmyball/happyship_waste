@@ -295,6 +295,9 @@ export class WorkbenchPage {
   onListItemClick(bag: WasteBagObj) {
     bag.isDisable = true;
     Object.assign(this.currentBag, bag);
+    if(!this.currentBag.category) {
+        this.currentBag.category = 'A';
+    }
   }
 
   onCheckItemClicked(value: string) {
