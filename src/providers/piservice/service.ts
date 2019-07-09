@@ -23,13 +23,13 @@ import { LoadingController, AlertController } from 'ionic-angular';
 export class Service {
 
     //config*********************************************************
-    version = "1.0.3(20190619002)";
+    version = "1.0.5(20190703002)";
     mode = "test";//dev, test, prod
     dev = "dev";
     test = "test";
     prod = "prod";
     devPrefix = "/apid";
-    testPrefix = "http://happyship.wisebox.com.cn:8080/happyship";
+    testPrefix = "http://transport.shyozan.com/mw";
     // testPrefix = "http://172.28.112.208:8080/yozan"
     // testPrefix = "http://transport.shyozan.com/yozantest";
     // prodPrefix = "http://hrwechat-qas.svw.cn";

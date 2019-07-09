@@ -19,7 +19,7 @@
   </ion-refresher>
   <div style="padding:10px;display:flex;align-items: center; justify-content: space-between" >
     <div style="color: #000;font-weight: bold;font-size: 16sp;">科室信息:</div>
-    <button ion-button small (click)="scan2Start()" style="min-width:95px"><ion-icon small name="ios-qr-scanner"></ion-icon>&nbsp;扫科室</button>
+    <button *ngIf="false"  ion-button small (click)="scan2Start()" style="min-width:95px"><ion-icon small name="ios-qr-scanner"></ion-icon>&nbsp;扫科室</button>
   </div>
   <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #aaa">
     <div class="div-depart-name">当前科室:{{currentDeptName}}</div>
@@ -27,7 +27,7 @@
   </div>
   <div style="padding:10px;display:flex;align-items: center; justify-content: space-between" >
     <div style="color: #000;font-weight: bold;font-size: 16sp;">任务信息:</div>
-    <button ion-button small (click)="scan2Start()" style="min-width:95px"><ion-icon small name="ios-qr-scanner"></ion-icon>&nbsp;扫垃圾袋</button>
+    <button *ngIf="false" ion-button small (click)="scan2Start()" style="min-width:95px"><ion-icon small name="ios-qr-scanner"></ion-icon>&nbsp;扫垃圾袋</button>
   </div>
   <div class="div-bags-item">
     <div class="div-bag-text" *ngIf="currentBag.bagId">垃圾袋:{{currentBag.bagId}}</div>

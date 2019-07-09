@@ -1,6 +1,6 @@
 import { Broadcaster } from '@ionic-native/broadcaster/ngx';
 import { Service } from './../../providers/piservice/service';
-import { ViewChild } from '@angular/core';
+import { ViewChild, NgZone } from '@angular/core';
 import { ZBarOptions } from '@ionic-native/zbar';
 import { ZBar } from '@ionic-native/zbar';
 import { Component } from '@angular/core';
@@ -44,7 +44,7 @@ export class WorkbenchPage {
     public toastCtrl: ToastController,
     private loadingCtrl: LoadingController,
     private service: Service,
-    private broadcaster:Broadcaster
+    private zone:NgZone
   ) {
   }
 
@@ -55,6 +55,12 @@ export class WorkbenchPage {
     });
     this.loading.present();
     this.getTaskList();
+    this.addReceiver();
+  }
+
+  ionViewDidLeave(){
+    //移除广播事件
+    (<any>window).broadcaster.removeEventListener('com.scanner.broadcast',this.broadcastListener);
   }
 
   doRefresh(event) {
@@ -106,22 +112,7 @@ export class WorkbenchPage {
     this.zbar.scan(options)
       .then(result => {
         console.log(result);
-        if (result.indexOf("WB") >= 0) {
-          if (this.currentDeptId) {
-            this.createTransferTask(result, this.currentDeptId, this.currentDeptName);
-          } else {
-            let alert = this.alertCtrl.create({
-              title: "提示",
-              message: "请先扫描科室二维码",
-              buttons: ["确定"]
-            });
-            alert.present();
-          }
-
-        } else {
-          this.getDepartName(result);
-        }
-        console.log(result);
+        this.getScanResult(result);
       })
       .catch(error => {
         if (error != "cancelled") {
@@ -131,14 +122,33 @@ export class WorkbenchPage {
       });
   }
 
+  getScanResult(result:string) {
+    if (result.indexOf("WB") >= 0) {
+      if (this.currentDeptId) {
+        this.createTransferTask(result, this.currentDeptId, this.currentDeptName);
+      } else {
+        let alert = this.alertCtrl.create({
+          title: "提示",
+          message: "请先扫描科室二维码",
+          buttons: ["确定"]
+        });
+        alert.present();
+      }
+    } else {
+      this.getDepartName(result);
+    }
+  }
+
   getDepartName(code: string) {
     if (code) {
 
       this.service.getDepartmentNameByCode(code).subscribe(result => {
         console.log('getDepartmentNameByCode:' + JSON.stringify(result));
         if (result && result['success']) {
-          this.currentDeptName = result['data'];
-          this.currentDeptId = code;
+          this.zone.run(()=>{
+            this.currentDeptName = result['data'];
+            this.currentDeptId = code;
+          })
         } else {
           let alert = this.alertCtrl.create({
             title: "提示",
@@ -209,13 +219,15 @@ export class WorkbenchPage {
     this.service.createMedicalWasteTranferTask(bagID, locationCode).subscribe(result => {
       console.log('createMedicalWasteTranferTask:' + JSON.stringify(result));
       if (result['success']) {
-        this.currentBag = new WasteBagObj();
-        this.currentBag.bagId = bagID;
-        this.currentBag.departId = locationCode;
-        this.currentBag.departName = deptName;
-        this.currentBag.taskId = result['data'];
-        this.currentBag.category = 'A';
-        this.currentBag.isDisable = false;
+        this.zone.run(()=>{
+          this.currentBag = new WasteBagObj();
+          this.currentBag.bagId = bagID;
+          this.currentBag.departId = locationCode;
+          this.currentBag.departName = deptName;
+          this.currentBag.taskId = result['data'];
+          this.currentBag.category = 'A';
+          this.currentBag.isDisable = false;
+        });
       } else {
         let alert = this.alertCtrl.create({
           title: "提示",
@@ -244,7 +256,9 @@ export class WorkbenchPage {
           buttons: ["确定"]
         });
         alert.present();
-        this.currentBag = new WasteBagObj();
+        this.zone.run(()=>{
+          this.currentBag = new WasteBagObj();
+        });
         this.getTaskList();
       } else {
         let alert = this.alertCtrl.create({
@@ -297,6 +311,26 @@ export class WorkbenchPage {
   checkNumbs(num: number): boolean {
     let reg = /^\d+(\.\d+)?$/g;
     return reg.test(num + '');
+  }
+
+  addReceiver() {
+    (<any>window).broadcaster.addEventListener('com.wisebox.happyship.mwts.broadcast',this.broadcastListener);
+  }
+
+  broadcastListener = (data)=> {
+    let result = data['data'];
+    if(result) {
+      let data:string = String(result).trim();
+      console.log( "com.scanner.broadcast received:[" + data+"]");
+      this.getScanResult(data)
+    }else {
+      let alert = this.alertCtrl.create({
+        title: "提示",
+        message: "扫描结果异常,请稍后再试!",
+        buttons: ["确定"]
+      });
+      alert.present();
+    }
   }
 
 }
