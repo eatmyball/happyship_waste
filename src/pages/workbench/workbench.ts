@@ -4,7 +4,7 @@ import { ViewChild, NgZone } from '@angular/core';
 import { ZBarOptions } from '@ionic-native/zbar';
 import { ZBar } from '@ionic-native/zbar';
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController, Refresher, ToastController, LoadingController, Loading } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, Refresher, ToastController, LoadingController, Loading, Content } from 'ionic-angular';
 import { LoginPage } from '../login/login';
 
 /**
@@ -24,6 +24,8 @@ export class WorkbenchPage {
   plus: any;
 
   @ViewChild(Refresher) refresher: Refresher;
+  @ViewChild(Content) content: Content;
+
   currentDeptName: string = '';
   currentDeptId: string = '';
 
@@ -44,7 +46,7 @@ export class WorkbenchPage {
     public toastCtrl: ToastController,
     private loadingCtrl: LoadingController,
     private service: Service,
-    private zone:NgZone
+    private zone: NgZone
   ) {
   }
 
@@ -58,9 +60,9 @@ export class WorkbenchPage {
     this.addReceiver();
   }
 
-  ionViewDidLeave(){
+  ionViewDidLeave() {
     //移除广播事件
-    (<any>window).broadcaster.removeEventListener('com.scanner.broadcast',this.broadcastListener);
+    (<any>window).broadcaster.removeEventListener('com.scanner.broadcast', this.broadcastListener);
   }
 
   doRefresh(event) {
@@ -85,6 +87,11 @@ export class WorkbenchPage {
             bag.date = result['data'][item]['weightTime'];
             bag.category = result['data'][item]['category'];
             bag.weight = result['data'][item]['weight'];
+            if (bag.weight) {
+              bag.isCommit = true;
+            } else {
+              bag.isCommit = false;
+            }
             bag.taskId = result['data'][item]['taskNo'];
             this.currentBag.isDisable = true;
             this.todayTasks.push(bag)
@@ -122,7 +129,7 @@ export class WorkbenchPage {
       });
   }
 
-  getScanResult(result:string) {
+  getScanResult(result: string) {
     if (result.indexOf("WB") >= 0) {
       if (this.currentDeptId) {
         this.createTransferTask(result, this.currentDeptId, this.currentDeptName);
@@ -145,9 +152,17 @@ export class WorkbenchPage {
       this.service.getDepartmentNameByCode(code).subscribe(result => {
         console.log('getDepartmentNameByCode:' + JSON.stringify(result));
         if (result && result['success']) {
-          this.zone.run(()=>{
+          this.zone.run(() => {
             this.currentDeptName = result['data'];
             this.currentDeptId = code;
+            if(!this.checkItemNotCommit()) {
+              let alert = this.alertCtrl.create({
+                title: "提示",
+                message: "您有未提交的任务，还请先称重后提交!",
+                buttons: ["确定"]
+              });
+              alert.present();
+            }
           })
         } else {
           let alert = this.alertCtrl.create({
@@ -219,7 +234,7 @@ export class WorkbenchPage {
     this.service.createMedicalWasteTranferTask(bagID, locationCode).subscribe(result => {
       console.log('createMedicalWasteTranferTask:' + JSON.stringify(result));
       if (result['success']) {
-        this.zone.run(()=>{
+        this.zone.run(() => {
           this.currentBag = new WasteBagObj();
           this.currentBag.bagId = bagID;
           this.currentBag.departId = locationCode;
@@ -227,6 +242,7 @@ export class WorkbenchPage {
           this.currentBag.taskId = result['data'];
           this.currentBag.category = 'A';
           this.currentBag.isDisable = false;
+          this.currentBag.isCommit = false;
         });
       } else {
         let alert = this.alertCtrl.create({
@@ -256,7 +272,7 @@ export class WorkbenchPage {
           buttons: ["确定"]
         });
         alert.present();
-        this.zone.run(()=>{
+        this.zone.run(() => {
           this.currentBag = new WasteBagObj();
         });
         this.getTaskList();
@@ -295,9 +311,10 @@ export class WorkbenchPage {
   onListItemClick(bag: WasteBagObj) {
     bag.isDisable = true;
     Object.assign(this.currentBag, bag);
-    if(!this.currentBag.category) {
-        this.currentBag.category = 'A';
+    if (!this.currentBag.category) {
+      this.currentBag.category = 'A';
     }
+    this.goToTop();
   }
 
   onCheckItemClicked(value: string) {
@@ -309,6 +326,7 @@ export class WorkbenchPage {
         category.isChecked = false;
       }
     }
+    
   }
 
   checkNumbs(num: number): boolean {
@@ -317,16 +335,16 @@ export class WorkbenchPage {
   }
 
   addReceiver() {
-    (<any>window).broadcaster.addEventListener('com.wisebox.happyship.mwts.broadcast',this.broadcastListener);
+    (<any>window).broadcaster.addEventListener('com.wisebox.happyship.mwts.broadcast', this.broadcastListener);
   }
 
-  broadcastListener = (data)=> {
+  broadcastListener = (data) => {
     let result = data['data'];
-    if(result) {
-      let data:string = String(result).trim();
-      console.log( "com.scanner.broadcast received:[" + data+"]");
+    if (result) {
+      let data: string = String(result).trim();
+      console.log("com.scanner.broadcast received:[" + data + "]");
       this.getScanResult(data)
-    }else {
+    } else {
       let alert = this.alertCtrl.create({
         title: "提示",
         message: "扫描结果异常,请稍后再试!",
@@ -334,6 +352,22 @@ export class WorkbenchPage {
       });
       alert.present();
     }
+  }
+
+  goToTop() {
+
+    this.content.scrollToTop();
+    console.log('Scroll to top!!!');
+  }
+
+  checkItemNotCommit():boolean {
+    for(let index in this.todayTasks) {
+      let item = this.todayTasks[index];
+      if(!item.isCommit) {
+        return false;
+      }
+    }
+    return true;
   }
 
 }
@@ -346,5 +380,6 @@ export class WasteBagObj {
   departName: string;
   category: string;
   isDisable: boolean = true;
+  isCommit: boolean = false;
   date: string = '';
 }
