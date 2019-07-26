@@ -23,7 +23,7 @@ import { LoadingController, AlertController } from 'ionic-angular';
 export class Service {
 
     //config*********************************************************
-    version = "1.0.7(20190724001)";
+    version = "1.0.8(20190726001)";
     mode = "test";//dev, test, prod
     dev = "dev";
     test = "test";
