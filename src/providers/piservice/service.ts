@@ -23,17 +23,15 @@ import { LoadingController, AlertController } from 'ionic-angular';
 export class Service {
 
     //config*********************************************************
-    version = "1.0.8(20190726001)";
-    mode = "test";//dev, test, prod
+    version = "1.0.9(20190820001)";
     dev = "dev";
     test = "test";
     prod = "prod";
+    mode = this.prod;//dev, test, prod
     devPrefix = "/apid";
-    testPrefix = "http://transport.shyozan.com/mw";
-    // testPrefix = "http://172.28.112.208:8080/yozan"
-    // testPrefix = "http://transport.shyozan.com/yozantest";
-    // prodPrefix = "http://hrwechat-qas.svw.cn";
-    prodPrefix = "http://transport.shyozan.com/";
+    testPrefix = "http://happyship.wisebox.com.cn:8080/happyship/";//测试地址
+    // prodPrefix = "http://transport.shyozan.com/"; 
+    prodPrefix = 'http://47.96.150.71/mw'; //生产地址
     timeout = 30000;
     apptimeout = 60000;
     interval = 600000;
@@ -193,6 +191,20 @@ export class Service {
         body.append("taskNo", bag.taskId);
         body.append("weight", bag.weight+'');
         body.append("category",bag.category);
+        return this.http.post(url, body, {
+            headers: authHeader,
+        }).timeout(this.timeout).map(res => res.json());
+    }
+
+    //修改医废运送任务重量
+    updateTaskWeight(taskId:string, weight:number, category:string) {
+        let url = this.getUrl('updateWasteTaskWeight');
+        let authHeader = new Headers();
+        authHeader.append('Content-Type', 'application/x-www-form-urlencoded');
+        let body = new URLSearchParams();
+        body.append("taskNo", taskId);
+        body.append("weight", weight+'');
+        body.append("category",category);
         return this.http.post(url, body, {
             headers: authHeader,
         }).timeout(this.timeout).map(res => res.json());
@@ -416,5 +428,20 @@ export class Service {
         const day: any = Dates.getDate() < 10 ? '0' + Dates.getDate() : Dates.getDate();
         const result = year + '' + month + '' + day;
         return result;
+    }
+
+    /**
+     * 保存未能成功提交的垃圾袋信息
+     * @param bag 
+     */
+    saveOffLineTask( bag:WasteBagObj) {
+        this.storage.set('WasteBag',bag);
+    }
+
+    /**
+     * 获取未能成功提交的离线任务数据
+     */
+    getOffLineTask() {
+        return this.storage.get('WasteBag');
     }
 }

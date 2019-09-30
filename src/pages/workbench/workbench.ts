@@ -58,6 +58,17 @@ export class WorkbenchPage {
     this.loading.present();
     this.getTaskList();
     this.addReceiver();
+    this.service.getOffLineTask().then(value=>{
+      this.currentBag = value;
+      if(this.currentBag) {
+        this.currentDeptId = this.currentBag.departId;
+        this.currentDeptName = this.currentBag.departName;
+        if(this.currentDeptId&&this.currentDeptName) {
+          this.showOffLineTask('您有一个离线的任务未提交，是否要继续提交?');
+        }
+        
+      }
+    });
   }
 
   ionViewDidLeave() {
@@ -200,17 +211,26 @@ export class WorkbenchPage {
 
       this.loading.present();
       setTimeout(() => {
-        if (this.currentBag.taskId) {
-          if (this.currentBag.category) {
-            this.updateWeight(this.currentBag);
-          } else {
-            let alert = this.alertCtrl.create({
-              title: "提示",
-              message: "请先选择垃圾类型!",
-              buttons: ["确定"]
-            });
-            alert.present();
+        if (this.currentBag.bagId) {
+          //判断是否有任务ID
+          if(this.currentBag.taskId) {
+            if (this.currentBag.category) {
+              this.updateWeight(this.currentBag);
+            } else {
+              let alert = this.alertCtrl.create({
+                title: "提示",
+                message: "请先选择垃圾类型!",
+                buttons: ["确定"]
+              });
+              alert.present();
+            }
+          } 
+          // 提示用户已经将数据保存到缓存中了，
+          else {
+            this.service.saveOffLineTask(this.currentBag);
+            this.showOffLineTask('当前网络不佳，已保存数据，是否重新提交?');
           }
+          
         } else {
           let alert = this.alertCtrl.create({
             title: "提示",
@@ -253,12 +273,22 @@ export class WorkbenchPage {
         alert.present();
       }
     }, error => {
-      let alert = this.alertCtrl.create({
-        title: "提示",
-        message: "创建失败，请稍后重试:" + JSON.stringify(error),
-        buttons: ["确定"]
+      // let alert = this.alertCtrl.create({
+      //   title: "提示",
+      //   message: "创建失败，请稍后重试:" + JSON.stringify(error),
+      //   buttons: ["确定"]
+      // });
+      // alert.present();
+      //网络异常或没有网络，无法获取taskID
+      this.zone.run(() => {
+        this.currentBag = new WasteBagObj();
+        this.currentBag.bagId = bagID;
+        this.currentBag.departId = locationCode;
+        this.currentBag.departName = deptName;
+        this.currentBag.category = 'A';
+        this.currentBag.isDisable = false;
+        this.currentBag.isCommit = false;
       });
-      alert.present();
     });
   }
 
@@ -368,6 +398,83 @@ export class WorkbenchPage {
       }
     }
     return true;
+  }
+
+  showOffLineTask(msg:string) {
+    let alert = this.alertCtrl.create({
+      title: "提示",
+      message: msg,
+      buttons: [{
+        text:"确定",
+        handler:()=>{
+          //再做一次提交
+          this.service.createMedicalWasteTranferTask(this.currentBag.bagId, this.currentBag.departId).subscribe(result => {
+            console.log('createMedicalWasteTranferTask:' + JSON.stringify(result));
+            if (result['success']) {
+              let taskId = result['data'];
+              if(taskId) {
+                this.service.updateTaskWeight(taskId, this.currentBag.weight, this.currentBag.category).subscribe(result => {
+                  if (result['success']) {
+                    let alert = this.alertCtrl.create({
+                      title: "提示",
+                      message: "提交成功!",
+                      buttons: ["确定"]
+                    });
+                    alert.present();
+                    this.zone.run(() => {
+                      this.currentBag = new WasteBagObj();
+                    });
+                    this.getTaskList();
+                  } else {
+                    this.service.saveOffLineTask(null);
+                    let alert = this.alertCtrl.create({
+                      title: "提示",
+                      message: "提交失败,请将垃圾袋二维码拍照保存提交给管理员处理!",
+                      buttons: ["确定"]
+                    });
+                    alert.present();
+                  }
+                }, error=>{
+                  this.service.saveOffLineTask(null);
+                let alert = this.alertCtrl.create({
+                  title: "提示",
+                  message: '提交失败,请将垃圾袋二维码拍照保存提交给管理员处理!',
+                  buttons: ["确定"]
+                });
+                alert.present();
+                });
+              }else {
+                this.service.saveOffLineTask(null);
+                let alert = this.alertCtrl.create({
+                  title: "提示",
+                  message: '创建任务失败,请将垃圾袋二维码拍照保存提交给管理员处理!',
+                  buttons: ["确定"]
+                });
+                alert.present();
+              }
+              
+            }else {
+              this.service.saveOffLineTask(null);
+              let alert = this.alertCtrl.create({
+                title: "提示",
+                message: "创建任务失败:" + result['data']+'请将垃圾袋二维码拍照保存提交给管理员处理!',
+                buttons: ["确定"]
+              });
+              alert.present();
+            }
+          }, error => {
+            let alert = this.alertCtrl.create({
+              title: "提示",
+              message: "提交失败，请稍后重试:" + JSON.stringify(error),
+              buttons: ["确定"]
+            });
+            alert.present();
+            
+          });
+        }
+      },{text:'取消'}],
+    });
+    alert.present();
   }
 
 }
