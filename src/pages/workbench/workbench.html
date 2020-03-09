@@ -7,7 +7,7 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>我的工作台</ion-title>
+      <ion-title>我的工作台</ion-title>
   </ion-navbar>
 
 </ion-header>
@@ -17,9 +17,20 @@
       refreshingText="加载中...">
     </ion-refresher-content>
   </ion-refresher>
-  <div style="padding:10px;display:flex;align-items: center; justify-content: space-between">
+  
+  <div style="display: flex; width: 100%; height: 35px; align-items: center; justify-content: space-between; padding: 0px 10px;">
+    <div style="display: flex;align-items: center;">
+      <div style="font-size: 1.5rem;">{{btName}}</div>
+    </div>
+    <button ion-button small (click)="showBtDevicies($event)" style="min-width:85px">
+      <ion-icon name="md-bluetooth" style="font-size: 1.4rem;"></ion-icon>
+      {{btBtnText}}
+    </button>
+  </div>
+
+  <div style="padding:10px;display:flex;align-items: center; justify-content: space-between;">
     <div style="color: #000;font-weight: bold;font-size: 16sp;">科室信息:</div>
-    <button *ngIf="false" ion-button small (click)="scan2Start()" style="min-width:95px">
+    <button *ngIf="isDebug" ion-button small (click)="scan2Start()" style="min-width:95px">
       <ion-icon small name="ios-qr-scanner"></ion-icon>&nbsp;扫科室
     </button>
   </div>
@@ -29,8 +40,11 @@
   </div>
   <div style="padding:10px;display:flex;align-items: center; justify-content: space-between">
     <div style="color: #000;font-weight: bold;font-size: 16sp;">任务信息:</div>
-    <button *ngIf="false" ion-button small (click)="scan2Start()" style="min-width:95px">
+    <button *ngIf="isDebug" ion-button small (click)="scan2Start()" style="min-width:95px">
       <ion-icon small name="ios-qr-scanner"></ion-icon>&nbsp;扫垃圾袋
+    </button>
+    <button ion-button small (click)="getBagWeight()" style="min-width:85px">
+      &nbsp;获取重量
     </button>
   </div>
   <div class="div-bags-item">

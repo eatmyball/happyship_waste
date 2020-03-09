@@ -1,11 +1,14 @@
+import { AvailableBhtDeviciesComponent } from './../../components/available-bht-devicies/available-bht-devicies';
+import { BluetoothSerial } from '@ionic-native/bluetooth-serial';
 import { Broadcaster } from '@ionic-native/broadcaster/ngx';
 import { Service } from './../../providers/piservice/service';
-import { ViewChild, NgZone } from '@angular/core';
+import { ViewChild, NgZone, EventEmitter } from '@angular/core';
 import { ZBarOptions } from '@ionic-native/zbar';
 import { ZBar } from '@ionic-native/zbar';
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, AlertController, Refresher, ToastController, LoadingController, Loading, Content } from 'ionic-angular';
+import { IonicPage, NavController, NavParams, AlertController, Refresher, ToastController, LoadingController, Loading, Content, Popover, PopoverController } from 'ionic-angular';
 import { LoginPage } from '../login/login';
+import { Observable } from 'rxjs/Observable';
 
 /**
  * Generated class for the WorkbenchPage page.
@@ -20,6 +23,19 @@ import { LoginPage } from '../login/login';
   templateUrl: 'workbench.html',
 })
 export class WorkbenchPage {
+
+  isDebug:boolean = false; //手机调试模式，打开以后可以看到扫码按钮
+
+  isBtConnect:boolean = false;
+
+  btName:string = '蓝牙未连接'; //已连接设备名称
+  btBtnText:string = '扫描';//扫描按钮文字
+  popover:Popover;
+  //已配对
+  paired: Array<BlueToothDeviceModel> = [];
+  //未配对
+  unPair: Array<BlueToothDeviceModel> = [];
+
 
   plus: any;
 
@@ -44,9 +60,11 @@ export class WorkbenchPage {
     private zbar: ZBar,
     private alertCtrl: AlertController,
     public toastCtrl: ToastController,
+    public popoverCtrl: PopoverController,
     private loadingCtrl: LoadingController,
     private service: Service,
-    private zone: NgZone
+    private zone: NgZone,
+    private bluetooth: BluetoothSerial
   ) {
   }
 
@@ -59,8 +77,9 @@ export class WorkbenchPage {
     this.getTaskList();
     this.addReceiver();
     this.service.getOffLineTask().then(value=>{
-      this.currentBag = value;
-      if(this.currentBag) {
+
+      if(value) {
+        this.currentBag = value;
         this.currentDeptId = this.currentBag.departId;
         this.currentDeptName = this.currentBag.departName;
         if(this.currentDeptId&&this.currentDeptName) {
@@ -76,8 +95,213 @@ export class WorkbenchPage {
     (<any>window).broadcaster.removeEventListener('com.scanner.broadcast', this.broadcastListener);
   }
 
+
+
   doRefresh(event) {
     this.getTaskList();
+  }
+
+  showBtDevicies(event) {
+    if(!this.isBtConnect) {
+      this.bluetooth.isEnabled().then(data => {
+        console.log("connectSmartLink: " + JSON.stringify(data));
+        this.loading = this.loadingCtrl.create({
+          content: '获取蓝牙设备中'
+        });
+        this.loading.present();
+        this.getBondedDevices().then(() => {
+          this.loading.dismiss();
+          let params = {};
+          params['paired'] = this.paired;
+          params['callback'] = this.deviceCallback;
+          this.popover = this.popoverCtrl.create(AvailableBhtDeviciesComponent, params);
+          this.popover.present({
+            ev: event
+          });
+        }).catch(error => {
+          this.presentToast("蓝牙连接错误: " + JSON.stringify(error),2000);
+          this.toastCtrl.create({
+  
+          }).present();
+          this.loading.dismiss();
+        });
+      }).catch(error => {
+        this.loading.dismiss();
+        console.log("connectSmartLink error: " + JSON.stringify(error));
+        this.presentToast("蓝牙未开启，请开启蓝牙后连接", 2000);
+      });
+    }else {
+      this.bluetooth.disconnect().then(data=>{
+        this.presentToast("蓝牙已断开", 1500);
+        this.zone.run(()=>{
+          this.btName = '蓝牙未连接';
+          this.btBtnText = '扫描';
+          this.isBtConnect = false;
+        });
+      });
+      
+    }
+    
+  }
+
+    /**
+   * 蓝牙设备选择回调事件
+   */
+  deviceCallback = (item) => {
+    let address = item.getAddress();
+    let name = item.getName();
+    if (address) {
+      // let timer = setTimeout(()=>{
+      //   this.bluetooth.disconnect();
+      //   this.presentToast("蓝牙连接超时，请重试", 1500);
+      //   this.loading.dismiss();
+      // }, 30000);
+      this.loading = this.loadingCtrl.create({
+        content: '蓝牙连接中'
+      });
+      this.loading.present();
+      this.bluetooth.isConnected().then(data => {
+        console.log("isConnected: " + data);
+        this.bluetooth.disconnect().then(data => {
+          console.log("disconnect: " + JSON.stringify(data));
+          this.doConnect(address, name);
+        }).catch(error => {
+          console.log("disconnect error: " + JSON.stringify(error));
+          this.isBtConnect = false;
+        });
+      }).catch(error => {
+        console.log("isConnected error: " + JSON.stringify(error));
+        this.doConnect(address, name);
+      });
+    } else {
+      this.loading.dismiss();
+      this.presentToast('无法连接，请稍后重试！', 2000);
+      this.isBtConnect = false;
+    }
+  };
+
+  doConnect(address: string, name: string) {
+    this.bluetooth.connect(address).subscribe(success => {
+      if (success === "OK") {
+        this.isBtConnect = true;
+        this.zone.run(()=>{
+          this.btName = name + '已连接';
+          this.btBtnText = '断开';
+        });
+        console.log("bluetooth connect " + name);
+        this.loading.dismiss();
+        this.popover.dismiss();
+        // this.startRead();
+        this.subscribeBluetooth('kg')
+      } else {
+        alert('蓝牙连接失败:'+JSON.stringify(success));
+        this.isBtConnect = false;
+        this.zone.run(()=>{
+          this.btName = '蓝牙未连接';
+          this.btBtnText = '扫描';
+        });
+      }
+    }, error => {
+      this.zone.run(() => {
+        this.isBtConnect = false;
+        this.btName = '蓝牙未连接';
+        this.btBtnText = '扫描';
+        this.loading.dismiss();
+        alert(JSON.stringify(error));
+      });
+    });
+  }
+
+  /**
+   * 开始监听蓝牙数据
+   */
+  lastBtData = '';
+  lastWeight:number = 0;
+  subscribeBluetooth(params: string){
+    this.bluetooth.isConnected().then(()=>{
+      this.bluetooth.clear();
+      this.bluetooth.subscribe(params).subscribe(data=>{
+       if(data) {
+         console.log("bluetooth receive " + data);
+         //不再重复拿取重量
+         if(this.lastBtData != data) {
+           this.lastBtData = data;
+           let str = parseFloat(data.replace(' ','').replace('+','').replace('kg','')).toString();
+           console.log("data format:" + str);
+           try{
+             this.lastWeight = parseFloat(parseFloat(str).toFixed(2));
+           }catch(error){
+             console.log("bluetooth data format error:" + JSON.stringify(error));
+           }
+         }
+       }
+     }, error=>{
+       console.log("bluetooth error: " + error);
+       this.bluetooth.disconnect().then(()=>{
+        this.presentToast("蓝牙已断开，请重新连接", 1500);
+        this.isBtConnect = false;
+       })
+     });
+    }).catch(error=>{
+      this.presentToast("蓝牙已断开，请重新连接", 1500);
+      this.isBtConnect = false;
+    });
+  }
+
+  /**
+   * 获取绑定设备
+   */
+  getBondedDevices(): Promise<any> {
+    this.paired = [];
+    return this.bluetooth.list().then(data => {
+      console.log('bonded:' + JSON.stringify(data));
+      for (let item of data) {
+        let name = item['name'];
+        if(name == 'HC-06') {
+          let device = new BlueToothDeviceModel();
+          device.setId(item['id']);
+          device.setAddress(item['address']);
+          device.setClass(item['class']);
+          device.setName(item['name']);
+          this.paired.push(device);
+        }
+      }
+    });
+  }
+
+  // /**
+  //  * 发送获取重量指令
+  //  */
+  // sendBtCmd() {
+  //   if (this.bluetooth.isConnected()) {
+  //     let cmd = 'R'.charCodeAt(0);
+  //     console.log('send bluetooth cmd:' + cmd);
+  //     this.bluetooth.write(cmd).then(data=>{
+  //       this.presentToast("正在获取重量，请稍候!", 1500);
+  //     }, error=>{
+  //       this.presentToast("发送失败，请稍后重试!", 1500);
+  //     });
+  //   } else {
+  //     this.presentToast("蓝牙已断开，请重新连接", 1500);
+  //   }
+  // }
+
+  /**
+   * 获取重量
+   */
+  getBagWeight() {
+    this.bluetooth.isConnected().then(()=>{
+      this.zone.run(()=>{
+        if(this.currentBag) {
+          this.currentBag.weight = this.lastWeight;
+          this.currentBag.isDisable = false;
+        }
+      });
+    }).catch(error=>{
+      this.presentToast("蓝牙未连接，请链接蓝牙后再试", 1500);
+      this.isBtConnect = false;
+    });
+
   }
 
   getTaskList() {
@@ -477,16 +701,79 @@ export class WorkbenchPage {
     alert.present();
   }
 
+  presentToast(msg: string, duration: number) {
+    let toast = this.toastCtrl.create({
+      message: msg,
+      duration: duration,
+      position: "bottom"
+    });
+    toast.present();
+  }
+
 }
 
 export class WasteBagObj {
-  taskId: string;
-  bagId: string;
+  taskId: string = '';
+  bagId: string = '';
   weight: number;
-  departId: string;
-  departName: string;
-  category: string;
+  departId: string = '';
+  departName: string = '';
+  category: string = '';
   isDisable: boolean = true;
   isCommit: boolean = false;
   date: string = '';
+}
+
+/**
+ * 蓝牙设备模型类
+ */
+export class BlueToothDeviceModel{
+
+  private id:string;
+  private _class:number;
+  private name:string;
+  private address:string;
+
+  constructor() {
+      
+  }
+  
+  public setId(v : string) {
+      this.id = v;
+  }
+
+  
+  public getId() : string {
+      return this.id;
+  }
+
+  
+  public setClass(v : number) {
+      this._class = v;
+  }
+
+  
+  public getClass() : number {
+      return this._class;
+  }
+
+  
+  public setName(v : string) {
+      this.name = v;
+  }
+
+  
+  public getName() : string {
+      return this.name;
+  }
+  
+  
+  public setAddress(v : string) {
+      this.address = v;
+  }
+  
+  
+  public getAddress() : string {
+      return this.address
+  }
 }

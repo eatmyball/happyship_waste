@@ -23,15 +23,15 @@ import { LoadingController, AlertController } from 'ionic-angular';
 export class Service {
 
     //config*********************************************************
-    version = "1.0.9(20190930001)";
+    version = "1.1.0(2020030601)";
     dev = "dev";
     test = "test";
     prod = "prod";
     mode = this.prod;//dev, test, prod
     devPrefix = "/apid";
-    testPrefix = "http://happyship.wisebox.com.cn:8080/happyship/";//测试地址
+    testPrefix = "http://transport.shyozan.com/mw";//测试地址
     // prodPrefix = "http://transport.shyozan.com/"; 
-    prodPrefix = 'http://47.96.150.71/mw'; //生产地址
+    prodPrefix = 'http://transport.shyozan.com/mw'; //生产地址
     timeout = 30000;
     apptimeout = 60000;
     interval = 600000;
@@ -76,6 +76,7 @@ export class Service {
         let body = new URLSearchParams();
         body.append("username", username);
         body.append("password", password);
+        console.log('params:' + body.toString());
         let url = this.getUrl('login');
         authHeader.append('Content-Type', 'application/x-www-form-urlencoded');
         // authHeader.append('Authorization', 'Basic ' + this.getAuthorizationBasic());

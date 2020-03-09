@@ -1,3 +1,4 @@
+import { BluetoothSerial } from '@ionic-native/bluetooth-serial';
 /*
   Description: 程序入口
   Author: ZhuChenjie
@@ -24,6 +25,7 @@ import {InAppBrowser} from '@ionic-native/in-app-browser';
 
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { ZBar } from '@ionic-native/zbar';
+import { AvailableBhtDeviciesComponent } from './../components/available-bht-devicies/available-bht-devicies';
 
 @NgModule({
     declarations: [
@@ -37,6 +39,7 @@ import { ZBar } from '@ionic-native/zbar';
         ItempopoverPage,
         HelpPage,
         LoginPage,
+        AvailableBhtDeviciesComponent
     ],
     imports: [
         BrowserModule,
@@ -62,11 +65,18 @@ import { ZBar } from '@ionic-native/zbar';
         ItempopoverPage,
         HelpPage,
         LoginPage,
+        AvailableBhtDeviciesComponent
     ],
     providers: [{
         provide: ErrorHandler,
         useClass: IonicErrorHandler
-    }, Service, InAppBrowser, SplashScreen, ZBar]
+        }, 
+        Service, 
+        InAppBrowser, 
+        SplashScreen, 
+        ZBar,
+        BluetoothSerial
+    ]
 })
 export class AppModule {
 }

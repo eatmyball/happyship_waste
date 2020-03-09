@@ -1,0 +1,40 @@
+<!-- Generated template for the AvailableBhtDeviciesComponent component -->
+<div>
+  <ion-list>
+    <div class="ion-list-header">
+      <div class="div-title-list">
+        已配对设备
+      </div>
+    </div>
+    <div *ngFor="let item of pairedDevices" style="padding: 7px 10px;">
+      <div class="div-list-item">
+        <ion-row align-items-center (click)="onItemClick(item)">
+          <div class="div-name-text">{{item.getName()}}</div>
+          <div class="div-name-text">[{{item.getAddress()}}]</div>
+        </ion-row>
+        
+      </div>
+
+    </div>
+    <div class="ion-list-header" style="margin-top: 10px">
+      <div class="div-title-list">
+        可配对设备
+      </div>
+    </div>
+    <div *ngFor="let item of unPairedDevices" style="padding: 7px 10px;">
+      <div class="div-list-item">
+        <ion-row align-items-center (click)="onItemClick(item)">
+          <div class="div-name-text">{{item.getName()}}</div>
+          <div class="div-name-text">[{{item.getAddress()}}]</div>
+        </ion-row>
+      </div>
+
+    </div>
+  </ion-list>
+  <div *ngIf="pairedDevices.length == 0 && unPairedDevices.length == 0" style="text-align: center;padding: 10px 10px 10px 10px">
+    没有搜索到蓝牙设备
+  </div>
+  <div style="text-align: center">
+    <button ion-button full [disabled]="disabled" (click)="doScan()" style="max-height: 35px;"><ion-spinner name="bubbles" *ngIf="disabled"></ion-spinner>{{tips}}</button>
+  </div>
+</div>

@@ -10,7 +10,7 @@
     },
     {
       "path": "/apid",
-      "proxyUrl": "http://transport.shyozan.com"
+      "proxyUrl": "http://47.96.150.71/mw"
     },
     {
       "path": "/apit",
