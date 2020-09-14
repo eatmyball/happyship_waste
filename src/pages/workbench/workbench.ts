@@ -45,11 +45,13 @@ export class WorkbenchPage {
   currentDeptName: string = '';
   currentDeptId: string = '';
 
-  bagCategory = [{ title: 'A感', value: 'A', isChecked: true },
-  { title: 'B损', value: 'B', isChecked: false },
-  { title: 'C化', value: 'C', isChecked: false },
-  { title: 'D病', value: 'D', isChecked: false },
-  { title: 'E药', value: 'E', isChecked: false }];
+  bagCategory = [{ title: '感', value: 'A', isChecked: true },
+  { title: '损', value: 'B', isChecked: false },
+  { title: '化', value: 'C', isChecked: false },
+  { title: '病', value: 'D', isChecked: false },
+  { title: '药', value: 'E', isChecked: false },
+  { title: '其他', value: 'F', isChecked: false }
+  ];
 
   currentBag: WasteBagObj = new WasteBagObj();
   todayTasks: WasteBagObj[] = [];
@@ -257,13 +259,15 @@ export class WorkbenchPage {
       console.log('bonded:' + JSON.stringify(data));
       for (let item of data) {
         let name = item['name'];
-        if(name == 'HC-06') {
-          let device = new BlueToothDeviceModel();
-          device.setId(item['id']);
-          device.setAddress(item['address']);
-          device.setClass(item['class']);
-          device.setName(item['name']);
-          this.paired.push(device);
+        if(name) {
+          if(name == 'HC-06' || (name.indexOf('WB01') >=0)) {
+            let device = new BlueToothDeviceModel();
+            device.setId(item['id']);
+            device.setAddress(item['address']);
+            device.setClass(item['class']);
+            device.setName(item['name']);
+            this.paired.push(device);
+          }
         }
       }
     });
@@ -488,6 +492,8 @@ export class WorkbenchPage {
           this.currentBag.isDisable = false;
           this.currentBag.isCommit = false;
         });
+        //创建任务成功，刷新列表显示
+        this.getTaskList();
       } else {
         let alert = this.alertCtrl.create({
           title: "提示",
@@ -598,6 +604,8 @@ export class WorkbenchPage {
       let data: string = String(result).trim();
       console.log("com.scanner.broadcast received:[" + data + "]");
       this.getScanResult(data)
+      //主动刷新列表
+
     } else {
       let alert = this.alertCtrl.create({
         title: "提示",
